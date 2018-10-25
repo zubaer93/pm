@@ -1,0 +1,70 @@
+.classeteste {
+    border: solid #ccc;
+    border-width: .0625rem 0;
+    display: block;
+    clear: left;
+    width: 100%;
+    min-height: 3.375rem;
+    background-color: #fdfdfd;
+}
+ul#trending-list{
+    margin: 0;
+}
+ul#trending-list li{
+    margin: .625rem 0;
+    width: 11.125rem;
+    padding: 0 .375rem 0 .5625rem;
+    border: dotted .0625rem #555;
+    border-width: 0 .0625rem 0 0;
+    font-family: BWHaasText-55Roman,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+ul#trending-list li:first-child{
+    border-left: .0625rem dotted #555;
+}
+ul#trending-list li .stock-link{
+    color: #2d2d35;
+    font-family: BWHaasHead-95Black,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: .6875rem;
+}
+ul#trending-list li .price-change{
+    font-size: .6875rem;
+    margin-left: .25rem;
+}
+ul#trending-list li .name {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: BWHaasHead-95Black,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: .75rem;
+    font-weight: bold;
+    line-height: .6875rem;
+}
+ul#trending-list li .title-cells {
+    width: 100%;
+    position: relative;
+}
+ul#trending-list li .price, .percent-change {
+    font-size: .6875rem;
+    color: #999;
+}
+ul#trending-list li .percent-change {
+    margin-left: .6875rem;
+}
+ul#trending-list li .market-hours {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    clear: left;
+    color: #999;
+    display: block;
+    font-size: .5625rem;
+}
+ul#trending-list li .timestamp:before {
+    /*content: "c";*/
+    font-family: Bloomberg;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-right: .1875rem;
+}
+ul#trending-list li h5 {
+    margin: 0;
+}

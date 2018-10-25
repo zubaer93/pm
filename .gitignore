@@ -1,0 +1,15 @@
+/vendor/*
+/config/app.php
+/tmp/*
+/logs/*
+.idea/
+.htaccess/
+/webroot/upload/*
+/.vagrant/*
+/puphpet/*
+Vagrantfile
+.DS_Store
+/plugins/GetStream/*
+/nbproject/*
+config/Migrations/schema-dump-default.lock
+composer.lock

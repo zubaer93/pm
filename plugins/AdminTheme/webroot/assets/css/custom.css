@@ -1,0 +1,11 @@
+#filter-heading div {
+	margin-bottom: 15px; 
+}
+
+.mt-24 {
+	margin-top: 24px !important;
+}
+
+.mb-0 {
+	margin-bottom: 0px !important;
+}

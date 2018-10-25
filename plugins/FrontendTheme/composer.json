@@ -1,0 +1,22 @@
+{
+    "name": "your-name-here/FrontendTheme",
+    "description": "FrontendTheme plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "cakephp/cakephp": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FrontendTheme\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FrontendTheme\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

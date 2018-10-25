@@ -1,0 +1,141 @@
+.inline-search .easy-autocomplete.eac-square input {
+    border: 1px solid #7f8c8d;
+    border-radius: 0;
+    color: #7f8c8d;
+    font-family: inherit;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 300;
+    margin: 0;
+    min-width: 250px;
+    padding: 6px 43px 6px 12px;
+}
+.eac-square input, .eac-round input {
+    background-image: url(/img/icon_search.png);
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 30px; 
+}
+.inline-search .easy-autocomplete-container a {
+    display: block;
+    color: #000;
+    font-size: 12px;
+    line-height: 110%;
+    padding: 8px 0 8px 12px;
+}
+.inline-search .easy-autocomplete-container a:hover {
+    background-color: #e8e8e8;
+}
+.inline-search .easy-autocomplete-container ul li:hover {
+    color: red;
+}
+.inline-search .easy-autocomplete-container .symbol {
+    width: 69px;
+    float: left;
+}
+.inline-search .easy-autocomplete-container .symbol-name {
+    width: 229px;
+    float: left;
+}
+.inline-search .easy-autocomplete-container .details {
+    width: 60px;
+    float: left;
+}
+.inline-search .easy-autocomplete.eac-square ul {
+    min-width: 400px;
+    border-top: 1px solid;
+    border-color: #7f8c8d;
+    border-top: 1px solid;
+    box-shadow: none;
+    top: 2px;
+}
+.inline-search .easy-autocomplete.eac-square ul li {
+    border-left: 5px solid;
+}
+
+.revtp-searchform .easy-autocomplete.eac-square input {
+    border: 1px solid #7f8c8d;
+    border-radius: 0;
+    color: #7f8c8d;
+    font-family: inherit;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 300;
+    margin: 0;
+    min-width: 250px;
+    padding: 6px 43px 6px 12px;
+}
+.eac-square input, .eac-round input {
+    background-image: url(/img/icon_search.png);
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+.revtp-searchform .easy-autocomplete-container a {
+    display: block;
+    color: #000;
+    font-size: 12px;
+    line-height: 110%;
+    padding: 8px 0 8px 12px;
+}
+.revtp-searchform .easy-autocomplete-container a:hover {
+    background-color: #e8e8e8;
+}
+.revtp-searchform .easy-autocomplete-container ul li:hover {
+    color: red;
+}
+.revtp-searchform .easy-autocomplete-container .symbol {
+    width: 69px;
+    float: left;
+}
+.revtp-searchform .easy-autocomplete-container .symbol-name {
+    width: 229px;
+    float: left;
+    letter-spacing: 0px;
+}
+.revtp-searchform .easy-autocomplete-container .details {
+    width: 60px;
+    float: left;
+}
+.revtp-searchform .easy-autocomplete.eac-square ul {
+    min-width: 400px;
+    border-top: 1px solid;
+    border-color: #7f8c8d;
+    border-top: 1px solid;
+    box-shadow: none;
+    top: 2px;
+}
+.revtp-searchform .easy-autocomplete.eac-square ul li {
+    border-left: 5px solid;
+}
+
+#header ul.nav-second-main li {
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-left: 0px;
+    background-color: #fcfcfc;
+}
+#header ul.nav-second-main li:hover {
+    background-color: #e8e8e8;
+}
+
+.revtp-searchform  ul.nav-second-main li {
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-left: 0px;
+    background-color: #fcfcfc;
+}
+.revtp-searchform  ul.nav-second-main li:hover {
+    background-color: #e8e8e8;
+}
+@media only screen and (max-width: 992px) {
+    .serach-ul{
+        min-width: 250px !important;
+    }
+    .symbol-name{
+        margin-bottom: 5px;
+        width:auto;
+        float: center;
+    }
+}

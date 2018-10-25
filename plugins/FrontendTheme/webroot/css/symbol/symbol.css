@@ -1,0 +1,733 @@
+section{
+    padding: 20px 0;
+}
+.chart-content{
+    border: 1px solid #e8e8e8;
+}
+.chart {
+    background: #fff;
+    display: block;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    position: relative;
+}
+ul.chart-zoom {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    list-style: none outside;
+    font-size: 12px;
+    margin-left: -24px;
+}
+ul.chart-zoom li {
+    width: 33px;
+    height: 20px;
+    line-height: 20px;
+    display: block;
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    font-weight: bold;
+    border-radius: 2px;
+}
+ul.chart-zoom li.zoom {
+    background-color: rgb(247, 247, 247);
+    margin-left: 3px;
+    cursor: pointer;
+}
+ul.chart-zoom li span {
+    font-weight: bold;
+}
+ul.chart-zoom li.selected {
+    background-color: #333;
+    color: #fff;
+}
+.ticker-header{
+    font-family: Arial;
+    color: #323232;
+    display: inline-block !important;
+    padding: 5px 12px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+.ticker-header.js-price-color.negative{
+    border-left: 7px solid #ED3B3B;
+}
+.ticker-header.js-price-color.positive {
+    border-left: 7px solid #8ECF61;
+}
+.ticker-container h1{
+    font-size: 16px;
+    line-height: 16px;
+    margin-bottom: 0px;
+    font-weight: 500;
+    width: 100%;
+    display: inline-block;
+    color: #000;
+}
+.symbol-box{
+    vertical-align: top;
+    color: #000;
+    font-weight: bold;
+    font-size: 36px;
+    display: inline-block;
+}
+.exchange{
+    font-size: 12px;
+    font-weight: normal;
+    color: #464e56;
+    text-transform: uppercase;
+    display: block;
+}
+.ticker-price{
+    display: inline-block;
+}
+.ticker-price .princing{
+    padding: 0 !important;
+}
+.ticker-price span.price{
+    font-size: 36px;
+    letter-spacing: -.03em;
+    margin-right: 8px;
+    font-weight: bold;
+}
+.ticker-price span.last-updated{
+    color: #464e56;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: block;
+}
+.ticker-price span.metric-change{
+    display: inline-block;
+}
+.negative.change-image{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 13.0px 7.5px 0 7.5px;
+    border-color: #ED3B3B transparent transparent;
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.positive.change-image{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 7.5px 13.0px 7.5px;
+    border-color: transparent transparent var(--logo-color, #8ab933);
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.negative.change-image-arrow{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 13.0px 7.5px 0 7.5px;
+    border-color: #ED3B3B transparent transparent;
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.positive.change-image-arrow{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 7.5px 13.0px 7.5px;
+    border-color: transparent transparent #8ECF61;
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.ticker-price .change{
+    display: inline;
+    font-size: 18px;
+    font-weight: 700;
+}
+.negative, .pricing .negative{
+    color: #ED3B3B;
+}
+.positive, .pricing .positive{
+    color: #008001;
+}
+.highcharts-candlestick-series .highcharts-point-up{
+    fill: #8ECF61;
+}
+.highcharts-candlestick-series .highcharts-point-down{
+    fill: #ED3B3B;
+}
+.btn-price-change{
+    cursor: pointer;
+    text-align: center;
+    border: medium none;
+    color: #FFF;
+    text-shadow: none;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%;
+    max-width: 300px;
+    padding: 4px;
+    font-size: 16px;
+    line-height: 38px;
+    box-shadow: none;
+}
+.btn-price-change h2{
+    font-size: 30px;
+    line-height: 30px;
+    margin-bottom: 0px;
+    display: inline;
+    position: relative;
+    top: 5px;
+    color: #FFF;
+    font-weight: 300;
+}
+.btn-price-change.positive{
+    background-color: #8ECF61;
+}
+.btn-price-change.negative{
+    background-color: #ED3B3B;
+}
+.btn-price-change.positive:hover{
+    background-color: #71a54d;
+}
+.btn-price-change.negative:hover{
+    background-color: #db3434;
+}
+.btn-price-change.watching {
+    background-color: #393939;
+}
+.btn-price-change.watching:hover {
+    background-color: #CCC;
+}
+.icon{
+    font-size: 15px;
+    width: 14px;
+    position: absolute;
+    left: -1.50em;
+    text-align: center;
+    top: 5px;
+}
+
+.message-box{
+    height: 100px;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #a0a0a0;
+    border-color: #a0a0a0 #a0a0a0 #cfcfcf;
+    border-radius: 4px;
+    box-shadow: 0 1px 0 #f6f6f6, inset 1px 1px 1px #dfdfdf;
+    display: block;
+    font: 14px/18px Arial, Trebuchet, sans-serif;
+    overflow-y: hidden;
+    padding: 6px 0 0 8px;
+    resize: none;
+}
+
+.stream-list {
+    list-style-type: none;
+}
+
+.stream-list > li .stream-content {
+    padding: 0px 0px;
+}
+
+.mb3-btn {
+    /*background: url(/../plugins/FrontendTheme/src/webroot/img/sprite-box.png) no-repeat;*/
+    bottom: 8px;
+    display: block;
+    height: 22px;
+    position: absolute;
+    text-indent: -9999px;
+    width: 22px;
+}
+
+ul.nano-content{
+    list-style: none outside;
+    padding: 0;
+}
+ul.nano-content-sector{
+    list-style: none outside;
+    padding: 0;
+}
+ul.nano-sector-content{
+    list-style: none outside;
+    padding: 0;
+}
+ul.nano-top-content{
+    list-style: none outside;
+    padding: 0;
+}
+ul.nano-worst-content{
+    list-style: none outside;
+    padding: 0;
+}
+ul.nano-industry-content{
+    list-style: none outside;
+    padding: 0;
+}
+.sector-details {
+    overflow-y: scroll;
+    overflow-x: hidden;
+/*    min-height: 512px;
+    max-height: 512px;*/
+    width: 100%;
+}
+.sector-list {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    min-height: 176px;
+    max-height: 176px;
+    width: 100%;
+}
+.sector-list2 {  
+    min-height: 800px;
+    max-height: 800px;
+}
+.sector-list3 {  
+    min-height: 480px;
+    max-height: 480px;
+}
+.sector-list ul{
+    margin-bottom: 0px;
+    height: 100%;
+    width: 100%;
+}
+.sector-list li{
+    padding: 8px 8px 8px 0px;
+    border-bottom: 1px solid #ddd;
+}
+.sector-list li .pricing{
+    overflow: hidden;
+    float: right;
+    height: 33px;
+}
+.sector-list li .js-price-color.price-color-change.positive{
+    background: #8ECF61 no-repeat center left;
+}
+.sector-list li .js-price-color.price-color-change.negative{
+    background: #ED3B3B no-repeat center left;
+}
+.sector-list li .js-price-color.price-color-change{
+    top: 0px;
+    margin-right: 5px;
+    height: 32px;
+    width: 4px;
+    float: left;
+}
+.sector-list li h2{
+    text-align: left;
+    margin-bottom: 0px;
+    font-size: 14px;
+    line-height: 16px;
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+}
+.sector-list li .symbol-title{
+    padding-top: 3px;
+    line-height: 16px;
+    font-size: 11px;
+    color: #929292;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+.sector-list li .pricing .price-container{
+    text-align: right;
+    overflow: hidden;
+    height: 18px;
+    padding-bottom: 20px;
+}
+.sector-list li .pricing h2{
+    display: inline;
+}
+.sector-list li .pricing .change-image.positive{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #8ECF61;
+    background: transparent;
+    padding-right: 0px;
+}
+#box-watchlist-content-industry{
+    min-height: 176px;
+    max-height: 176px;
+}
+#box-watchlist-content-sector{
+    min-height: 176px;
+    max-height: 176px;
+}
+.change-image-arrow.positive{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5.5px 9.0px 5.5px;
+    border-color: transparent transparent var(--logo-color, #8ab933);
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.sector-list li .pricing .change-image.negative{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #ED3B3B;
+    background: transparent;
+    padding-right: 0px;
+}
+.change-image-arrow.negative{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 9px 5.5px 0 5.5px;
+    border-color: #ED3B3B transparent transparent;
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.sector-list li .pricing .change{
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    line-height: 13px;
+    font-size: 11px;
+    margin-left: 3px;
+    font-weight: 700;
+}
+.sector-list li .positive{
+    color: #8ECF61;
+}
+.wl-list {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    min-height: 116px;
+    max-height: 300px;
+    width: 100%;
+}
+.wl-list ul{
+    margin-bottom: 0px;
+    height: 100%;
+    width: 100%;
+}
+.wl-list li{
+    padding: 8px 8px 8px 0px;
+    border-bottom: 1px solid #ddd;
+}
+.wl-list li .pricing{
+    overflow: hidden;
+    float: right;
+    height: 33px;
+}
+.wl-list li .js-price-color.price-color-change.positive{
+    background: #8ECF61 no-repeat center left;
+}
+.wl-list li .js-price-color.price-color-change.negative{
+    background: #ED3B3B no-repeat center left;
+}
+.wl-list li .js-price-color.price-color-change{
+    top: 0px;
+    margin-right: 5px;
+    height: 32px;
+    width: 4px;
+    float: left;
+}
+.wl-list li h2{
+    text-align: left;
+    margin-bottom: 0px;
+    font-size: 14px;
+    line-height: 16px;
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+}
+.wl-list li .symbol-title{
+    padding-top: 3px;
+    line-height: 16px;
+    font-size: 11px;
+    color: #929292;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+.wl-list li .pricing .price-container{
+    text-align: right;
+    overflow: hidden;
+    height: 18px;
+    padding-bottom: 20px;
+}
+.wl-list li .pricing h2{
+    display: inline;
+}
+.wl-list li .pricing .change-image.positive{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #8ECF61;
+    background: transparent;
+    padding-right: 0px;
+}
+.wl-list li .pricing .change-image.negative{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #ED3B3B;
+    background: transparent;
+    padding-right: 0px;
+}
+.wl-list li .pricing .change{
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    line-height: 13px;
+    font-size: 11px;
+    margin-left: 3px;
+    font-weight: 700;
+}
+.wl-list li .positive{
+    color: #8ECF61;
+}
+
+.no-margin {
+    margin: 0px !important;
+}
+.ol-list {
+    -webkit-padding-start :0px !important;
+}
+.message-content{
+    min-height: 20px !important;
+}
+@media only screen and (max-width: 992px) {
+    .font-size{
+        font-size: 17px !important;
+    }
+}
+@media only screen and (max-width: 420px) {
+    /*    .font-size{
+            font-size: 12px !important;
+        }*/
+    .negative.change-image{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10.0px 7.5px 0 7.5px;
+        border-color: #ED3B3B transparent transparent;
+        background-position: 0px 0px;
+        display: inline-block;
+    }
+    .positive.change-image{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 7.5px 10.0px 7.5px;
+        border-color: transparent transparent var(--logo-color, #8ab933);
+        background-position: 0px 0px;
+        display: inline-block;
+    }
+    .negative.change-image-arrow{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 10.0px 7.5px 0 7.5px;
+        border-color: #ED3B3B transparent transparent;
+        background-position: 0px 0px;
+        display: inline-block;
+    }
+    .positive.change-image-arrow{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 7.5px 10.0px 7.5px;
+        border-color: transparent transparent #8ECF61;
+        background-position: 0px 0px;
+        display: inline-block;
+    }
+}
+.sector-list-custom{
+    max-height: 200px !important;
+    min-height: 200px !important;
+}
+.analysis_btn{
+    font-size: 16px !important;
+    line-height: 35px !important;
+    border-radius: 4px !important;
+    text-align: center !important;
+    height: 50px !important;
+    background-color: var(--main-color, #8ab933) !important;
+    border: medium none !important;
+}
+.ticker-h4{
+    text-align: right;
+    margin-top: 8%;
+}
+.ticker-button{
+    margin-top: 8%;
+}
+@media only screen and (min-width: 992px) {
+    .divs_ticker {
+    }
+
+    .divs_ticker .first_div_ticker {
+        -webkit-box-ordinal-group: 1;
+        -moz-box-ordinal-group: 1;
+        -ms-flex-order: 1;
+        -webkit-order: 1;
+        order: 1;
+    }
+
+    .divs_ticker .second_div_ticker {
+        -webkit-box-ordinal-group: 2;
+        -moz-box-ordinal-group: 2;
+        -ms-flex-order: 2;
+        -webkit-order: 2;
+        order: 2;
+    }
+    .divs_ticker .third_div_ticker {
+        -webkit-box-ordinal-group: 3;
+        -moz-box-ordinal-group: 3;
+        -ms-flex-order: 3;
+        -webkit-order: 3;
+        order: 3;
+    }
+}
+@media only screen and (max-width: 992px) {
+
+    .ticker-h4{
+        text-align: right;
+        margin-top: 5%;
+    }
+    .ticker-button{
+        margin-top: 5%;
+    }
+    .divs_ticker .first_div_ticker {
+        width: 50% !important;
+    }
+    .divs_ticker .third_div_ticker {
+        width: 50%!important;
+    }
+    .ticker_row{
+        width: 100%!important;
+    }
+}
+#company-grid_processing{
+    margin-left: 45%;
+}
+#news-grid_processing{
+    margin-left: 45%;
+}
+#financial-grid_processing{
+    margin-left: 45%;
+}
+#time-and-sales-grid_processing{
+    margin-left: 45%;
+}
+.div-max-height-348{
+    max-height: 348px;
+}
+
+.sector-list1 {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+}
+.sector-list1 ul{
+    margin-bottom: 0px;
+    height: 100%;
+    width: 100%;
+}
+.sector-list1 li{
+    padding: 8px 8px 8px 0px;
+    border-bottom: 1px solid #ddd;
+}
+.sector-list1 li .pricing{
+    overflow: hidden;
+    float: right;
+    height: 33px;
+}
+.sector-list1 li .js-price-color.price-color-change.positive{
+    background: #8ECF61 no-repeat center left;
+}
+.sector-list1 li .js-price-color.price-color-change.negative{
+    background: #ED3B3B no-repeat center left;
+}
+.sector-list1 li .js-price-color.price-color-change{
+    top: 0px;
+    margin-right: 5px;
+    height: 32px;
+    width: 4px;
+    float: left;
+}
+.sector-list1 li h2{
+    text-align: left;
+    margin-bottom: 0px;
+    font-size: 14px;
+    line-height: 16px;
+    display: block;
+    overflow: initial;
+    padding: 0;
+    border: 0;
+}
+.sector-list1 li .symbol-title{
+    padding-top: 3px;
+    line-height: 16px;
+    font-size: 11px;
+    color: #929292;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+.sector-list1 li .pricing .price-container{
+    text-align: right;
+    overflow: hidden;
+    height: 18px;
+    padding-bottom: 20px;
+}
+.sector-list1 li .pricing h2{
+    display: inline;
+}
+.sector-list1 li .pricing .change-image.positive{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #8ECF61;
+    background: transparent;
+    padding-right: 0px;
+}
+
+.sector-list1 li .pricing .change-image.negative{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 9px 5px;
+    border-color: transparent transparent #ED3B3B;
+    background: transparent;
+    padding-right: 0px;
+}
+
+.sector-list1 li .pricing .change{
+    overflow: hidden;
+    white-space: nowrap;
+    float: right;
+    line-height: 13px;
+    font-size: 11px;
+    margin-left: 3px;
+    font-weight: 700;
+}
+.sector-list1 li .positive{
+    color: #8ECF61;
+}
+.second_div, .first_div{
+
+    font-size: 14px;
+    font-weight: 600;
+
+}
