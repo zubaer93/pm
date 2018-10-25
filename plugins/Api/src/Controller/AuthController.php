@@ -31,7 +31,9 @@ class AuthController extends AppController
         if (!empty($data)) {
             try {
                 if (!empty($data['email']) && !empty($data['password'])) {
-                    $user = $this->AppUsers->find()->where(['email' => $data['email']])->orWhere(['username' => $data['email']])
+                    $user = $this->AppUsers->find()
+                        ->where(['email' => $data['email']])
+                        ->orWhere(['mobile_number' => $data['email']])
                         ->first();
                     if ($user) {
                         if ($user['active'] == 1) {
@@ -47,7 +49,7 @@ class AuthController extends AppController
                         }
                     } else {
                         $this->httpStatusCode = 400;//
-                        $this->apiResponse['error'] = 'No such email or username found';
+                        $this->apiResponse['error'] = 'No such email or mobile number found';
                     }
                 } else {
                     $this->httpStatusCode = 400;// bad request
@@ -71,28 +73,28 @@ class AuthController extends AppController
         } else {
             $avatar = Configure::read('Users.avatar.default');
         }
-        $interval = date_diff($user->created, date_create());
+        // $interval = date_diff($user->created, date_create());
      
-        if($interval->days <=14){
-            $isTrial = true;
-        }
-        else{
-            $isTrial = false;
-        }
+        // if($interval->days <=14){
+        //     $isTrial = true;
+        // }
+        // else{
+        //     $isTrial = false;
+        // }
         $user_data = array(
             'token' => JwtToken::generateToken($users),
             'user_id' => $user['id'],
             'name' => $user['first_name'] . ' ' . $user['last_name'],
             'email' => $user['email'],
             'avatar' => Router::url($avatar, true),
-            'username' => $user['username'],
+            'mobile_number' => $user['mobile_number'],
             'role' => $user['role'],
             'is_superuser' => $user['is_superuser'],
             'account_type' => $user['account_type'],
             'activation_date' => $user['activation_date'],
             'is_new' => $user->isNew(),
             'created_at' => $user->created,
-            'isTrial' => $isTrial
+            //'isTrial' => $isTrial
         );
         // add logs
         //$options = array('token' => $user_data['token'], 'content_id' => $user['id'], 'user_id' => $user['id'], 'type' => 'users', 'action' => 'login');
@@ -117,8 +119,6 @@ class AuthController extends AppController
                         $data['token'] = $activation;
                         $data['active'] = 0;
                         $user = $this->AppUsers->newEntity();
-                        $user->experince_id = $data['experience'];
-                        $user->investment_style_id = $data['investment_style'];
                         $user->date_of_birth = date("Y-m-d", strtotime($data['birth_date']));
                         $user = $this->AppUsers->patchEntity($user, $data);
                         if ($this->AppUsers->save($user)) {
@@ -168,7 +168,7 @@ class AuthController extends AppController
         $this->loadModel('Api.AppUsers');
         $data = $this->request->getData();
         if (!empty($data)) {
-            $check_user = $this->AppUsers->find()->where(['token' => $data['activation_code']])->first();
+            $check_user = $this->AppUsers->find()->where(['token' => $data['activation_code'] , 'mobile_number' => $data['mobile_number']])->first();
             if (!empty($check_user)) {
                 $check_user->active = 1;
                 $check_user->token = '';
@@ -196,7 +196,7 @@ class AuthController extends AppController
             $this->loadModel('Api.AppUsers');
             $user = $this->AppUsers->find()->where(['email' => $email])->first();
             $userName = "{$user['first_name']} {$user['last_name']}";
-            $options = array('template' => 'welcome_user', 'to' => $email, 'user_details' => $userName, 'subject' => 'Welcome');
+            $options = array('template' => 'activation_confirm', 'to' => $email, 'user_details' => $userName, 'subject' => 'Welcome to pocket money');
             $this->send_email($options);
             return $message = 'Account confirmation email has been sent successfully.';
         } else {
@@ -280,15 +280,13 @@ class AuthController extends AppController
         $this->request->allowMethod('post');
         $this->loadModel('Api.AppUsers');
         if (!empty($data = $this->request->getData())) {
-            if (!empty($this->AppUsers->find()->where(['email' => $data['email'], 'api_token' => $this->jwtToken])->first())) {
-                $this->apiResponse['message'] = 'ok';
-
-            } elseif (!empty($this->AppUsers->find()->where(['email' => $data['email']])->first())) {
-
-                $this->apiResponse['message'] = 'ok';
-            } else {
+            $check_email = $this->AppUsers->find()->where(['email' => $data['email']])->first();
+            if ($check_email) {
                 $this->httpStatusCode = 403;
-                $this->apiResponse['error'] = [];
+                $this->apiResponse['message'] = false;
+
+            } else {
+                $this->apiResponse['message'] = true;
             }
         } else {
             $this->httpStatusCode = 403;
@@ -300,21 +298,21 @@ class AuthController extends AppController
    *@ input- username
    * @return message
    */
-    public function checkUsername()
+    public function checkPhone()
     {
 
         $this->request->allowMethod('post');
         $this->loadModel('Api.AppUsers');
         if (!empty($data = $this->request->getData())) {
-            if (!empty($this->AppUsers->find()->where(['username' => $data['user_name']])->first())) {
-                $this->apiResponse['message'] = "ok";
-            } else {
+            if (!empty($this->AppUsers->find()->where(['mobile_number' => $data['mobile_number']])->first())) {
                 $this->httpStatusCode = 403;
-                $this->apiResponse['error'] = [];
+                $this->apiResponse['message'] = false;
+            } else {
+                $this->apiResponse['message'] = true;
             }
         } else {
             $this->httpStatusCode = 403;
-            $this->apiResponse['error'] = 'Please enter username';
+            $this->apiResponse['error'] = 'Please enter a mobile number';
         }
     }
 

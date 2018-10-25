@@ -13,15 +13,9 @@
                             <tr>
                                 <td class="wrapper last">
                                     <h2>Welcome to Stockgitter.</h2>
-                                    <p>
+                                    <p> Hello <?= $user_details; ?>, <br /> <br />
                                         Congratulations! Your account has been activated successfully.
                                     </p>
-                                    <p>
-                                        Click the below link to login your account.
-                                    </p>
-                                    <p><a href="" style="color:#2ba6cb;">
-                                        </a></p>
-
                             </tr>
                         </table>
                         <span class="devider">

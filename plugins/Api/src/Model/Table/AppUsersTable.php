@@ -81,12 +81,6 @@ class AppUsersTable extends UsersTable
   
         $interval = date_diff($currentUser['created'], date_create());
 
-        if($interval->days <=14){
-            $currentUser['isTrial'] = true;
-        }
-        else{
-            $currentUser['isTrial'] = false;
-        }
         if (!$currentUser) {
             $currentUser = (object)['account_type' => 'FREE'];
         }

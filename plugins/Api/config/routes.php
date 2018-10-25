@@ -34,7 +34,7 @@ Router::plugin('Api', ['path' => '/api'], function (RouteBuilder $routes) {
 
 
     $routes->connect('/users/check-email', ['controller' => 'auth', 'action' => 'checkEmail', 'allowWithoutToken' => true], ['routeClass' => 'Api.LangRoute']);
-    $routes->connect('/users/check-user-name', ['controller' => 'auth', 'action' => 'checkUsername', 'allowWithoutToken' => true], ['routeClass' => 'Api.LangRoute']);
+    $routes->connect('/users/check-phone', ['controller' => 'auth', 'action' => 'checkPhone', 'allowWithoutToken' => true], ['routeClass' => 'Api.LangRoute']);
 
     $routes->connect('/auth/avatar', ['controller' => 'auth', 'action' => 'editAvatar'], ['routeClass' => 'Api.LangRoute']);
     $routes->connect('/auth/video', ['controller' => 'auth', 'action' => 'uploadVideo'], ['routeClass' => 'Api.LangRoute']);
