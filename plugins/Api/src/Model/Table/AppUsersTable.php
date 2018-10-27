@@ -98,9 +98,9 @@ class AppUsersTable extends UsersTable
         $validator
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->requirePresence('username', 'create')
-            ->notEmpty('username');
+        // $validator
+        //     ->requirePresence('username', 'create')
+        //     ->notEmpty('username');
         $validator->add('email', [
             'validEmail' => [
                 'rule' => 'email',

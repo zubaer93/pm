@@ -121,6 +121,7 @@ class AuthController extends AppController
                         $user = $this->AppUsers->newEntity();
                         $user->date_of_birth = date("Y-m-d", strtotime($data['birth_date']));
                         $user = $this->AppUsers->patchEntity($user, $data);
+                        //dd($user);
                         if ($this->AppUsers->save($user)) {
                             Configure::load('Api.appConfig', 'default');
                             $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Pocket Money Account Activation');
