@@ -91,80 +91,90 @@ class UsersController extends AppController
 
     //get all user info
     public function userList()
-    {
-        $requestData = $this->request->getQuery();
-        $this->request->allowMethod('get');
-        $this->add_model(array('Api.AppUsers'));
-        $users = $this->AppUsers->find('all');
-
-        $detail = $users;
-        $count = $users->count();
-        $totalData = isset($count) ? $count : 0;
-        $totalFiltered = $totalData;
-
-        if (isset($requestData['search_value']) && !empty($requestData['search_value'])) {
-            $search = $requestData['search_value'];
-
-            $detail = $detail
-                ->where([
-                    'OR' => [
-                        ['(AppUsers.username) LIKE' => '%' . $search . '%'],
-                        ['(AppUsers.first_name) LIKE' => '%' . $search . '%'],
-                        ['(AppUsers.last_name) LIKE' => '%' . $search . '%'],
-                    ]]);
-
-            $company_count = $detail;
-            $totalFiltered = $company_count->count();
+    { 
+        if(($this->jwtPayload->role) == 'admin')
+        {
+            $requestData = $this->request->getQuery();
+            $this->request->allowMethod('get');
+            $this->add_model(array('Api.AppUsers'));
+            $users = $this->AppUsers->find('all');
+    
+            $detail = $users;
+            $count = $users->count();
+            $totalData = isset($count) ? $count : 0;
+            $totalFiltered = $totalData;
+    
+            if (isset($requestData['search_value']) && !empty($requestData['search_value'])) {
+                $search = $requestData['search_value'];
+    
+                $detail = $detail
+                    ->where([
+                        'OR' => [
+                            ['(AppUsers.mobile_number) LIKE' => '%' . $search . '%'],
+                            ['(AppUsers.first_name) LIKE' => '%' . $search . '%'],
+                            ['(AppUsers.last_name) LIKE' => '%' . $search . '%'],
+                        ]]);
+    
+                $company_count = $detail;
+                $totalFiltered = $company_count->count();
+            }
+            $columns = array(
+                0 => 'AppUsers.id',
+                1 => 'AppUsers.mobile_number',
+                2 => 'AppUsers.email',
+                3 => 'AppUsers.first_name',
+                4 => 'AppUsers.last_name',
+                5 => 'AppUsers.activation_date',
+                6 => 'AppUsers.active',
+                7 => 'AppUsers.is_superuser',
+                8 => 'AppUsers.role',
+                9 => 'AppUsers.created',
+                10 => 'AppUsers.modified',
+                11 => 'AppUsers.avatar',
+                12 => 'AppUsers.date_of_birth',
+                13 => 'AppUsers.investment_style_id'
+            );
+            $order_col = isset($requestData['order_col']) ? $requestData['order_col'] : 0;
+            $sidx = isset($columns[$order_col]) ? $columns[$order_col] : $columns[0];
+            $sord = !isset($requestData['order_dir']) ? 'asc' : $requestData['order_dir'];
+            $length = !isset($requestData['length']) ? 5 : $requestData['length'];
+    
+            $results = $this->paginate($detail
+                ->select([
+                    'id',
+                    'mobile_number',
+                    'email',
+                    'first_name',
+                    'last_name',
+                    'name' => 'CONCAT(first_name," ",last_name)',
+                    'active',
+                    'activation_date',
+                    'role',
+                    'is_superuser',
+                    'avatar',
+                    'modified',
+                    'created',
+                    'date_of_birth',
+                    'account_type',
+                    'address1',
+                    'nid_number',
+                ])
+                ->order($sidx . ' ' . $sord)
+                ->limit((int)$length)
+            );
+            $paginate = $this->Paginator->configShallow(['data' => $results])->request->getParam('paging')['AppUsers'];
+            $data = $results;
+            $json_data = array(
+                "data" => $data,
+                "paginate" => $paginate
+            );
+            $this->apiResponse = $json_data;
         }
-        $columns = array(
-            0 => 'AppUsers.id',
-            1 => 'AppUsers.username',
-            2 => 'AppUsers.email',
-            3 => 'AppUsers.first_name',
-            4 => 'AppUsers.last_name',
-            5 => 'AppUsers.activation_date',
-            6 => 'AppUsers.active',
-            7 => 'AppUsers.is_superuser',
-            8 => 'AppUsers.role',
-            9 => 'AppUsers.created',
-            10 => 'AppUsers.modified',
-            11 => 'AppUsers.avatar',
-            12 => 'AppUsers.date_of_birth',
-            13 => 'AppUsers.investment_style_id'
-        );
-        $order_col = isset($requestData['order_col']) ? $requestData['order_col'] : 0;
-        $sidx = isset($columns[$order_col]) ? $columns[$order_col] : $columns[0];
-        $sord = !isset($requestData['order_dir']) ? 'asc' : $requestData['order_dir'];
-        $length = !isset($requestData['length']) ? 5 : $requestData['length'];
-
-        $results = $this->paginate($detail
-            ->select([
-                'id',
-                'username',
-                'email',
-                'first_name',
-                'last_name',
-                'name' => 'CONCAT(first_name," ",last_name)',
-                'active',
-                'activation_date',
-                'role',
-                'is_superuser',
-                'avatar',
-                'modified',
-                'created',
-                'date_of_birth',
-                'investment_style_id'
-            ])
-            ->order($sidx . ' ' . $sord)
-            ->limit((int)$length)
-        );
-        $paginate = $this->Paginator->configShallow(['data' => $results])->request->getParam('paging')['AppUsers'];
-        $data = $results;
-        $json_data = array(
-            "data" => $data,
-            "paginate" => $paginate
-        );
-        $this->apiResponse = $json_data;
+        else{
+            $this->httpStatusCode = 500;
+            $this->apiResponse['error'] = 'Authorization failed, only admin can access';
+        }
+      
 
     }
 
@@ -198,87 +208,56 @@ class UsersController extends AppController
         }
     }
 
-    /**
-     * settings method will redirect to profile
+    /* uploadVideo method Upload a vdo file and move to plugin/Api/upload/video/
      *
-     * @return void
+     * @param $id string user id
+     * @return redirect to profile page
      */
-    public function alerts()
+    public function uploadDocuments()
     {
+        $this->request->allowMethod('post');
         $this->add_model(array('Api.AppUsers'));
-        if ($this->jwtPayload->id) {
-            if ($this->request->is(['post', 'put'])) {
-                if ($this->AppUsers->saveAlerts($this->request->getData(), $this->jwtPayload->id)) {
-                    $this->apiResponse['message'] = 'Alerts were saved successfully';
-                } else {
-                    $this->httpStatusCode = 500;
-                    $this->apiResponse['error'] = 'Alert Can\'t be save';
+        if ($user = $this->AppUsers->get($this->jwtPayload->id)) {
+            if ($data = $this->request->getData()) {
+                if((int) $_SERVER['CONTENT_LENGTH'] > 10000000){
+                    $this->httpStatusCode = 403;
+                    $this->apiResponse['error'] = 'File size is large, upload maximum 2 mb files each';
                 }
-                return;
-            }
-            $user = $this->AppUsers->get($this->jwtPayload->id, [
-                'contain' => ['EmailAlerts', 'SmsAlerts', 'TimeAlerts']
-            ]);
-
-            $data = $this->alertData($user);
-
-            if (!empty($data)) {
-                $this->apiResponse['data'] = $data;
+                else{
+                    $data['id'] = $this->jwtPayload->id;
+                    $result = $this->AppUsers->uploadDoc($data);
+                    if ($result) {
+                        if($result['nid']){ 
+                            $this->apiResponse['nid'] = Router::url($result['nid'], true);
+                        }
+                        if($result['verifyPhoto']){ 
+                            $this->apiResponse['verifyPhoto'] = Router::url($result['verifyPhoto'], true);
+                        }
+                        if($result['statement1']){ 
+                            $this->apiResponse['statement'] = Router::url($result['statement1'], true);
+                        }
+                        if($result['utility_bill']){ 
+                            $this->apiResponse['utility_bill'] = Router::url($result['utility_bill'], true);
+                        }
+                        if($result['others_doc']){ 
+                            $this->apiResponse['others'] =  Router::url($result['others_doc'], true);
+                        }
+                        $this->apiResponse['message'] = 'Documents has been uploded successfully.';
+                    } 
+                    else {
+                        $this->httpStatusCode = 403;
+                        $this->apiResponse['error'] = 'Documents could not be uploaded. Please try again.';
+                    }
+                } 
             } else {
-                $this->apiResponse['error'] = 'error';
+                $this->httpStatusCode = 403;
+                $this->apiResponse['error'] = 'No Documents found. Please upload an documents';
             }
-
         } else {
-            $this->httpStatusCode = 404;
-            $this->apiResponse['error'] = 'not logged in';
-        }
-    }
-
-    private function alertData($user)
-    {
-        $email = [];
-        $sms = [];
-        foreach ($user['email_alerts'] as $users) {
-            $email[] = $users['global_alert_id'];
-        }
-        foreach ($user['sms_alerts'] as $usersms) {
-            $sms[] = $usersms['global_alert_id'];
+            $this->httpStatusCode = 403;
+            $this->apiResponse['error'] = 'Please login to continue';
         }
 
-        $email_watchlist = 0;
-        $email_stock = 0;
-        $email_event = 0;
-        $sms_watchlist = 0;
-        $sms_stock = 0;
-        $sms_event = 0;
-
-        if (in_array("1", $email)) {
-            $email_watchlist = 1;
-        }
-        if (in_array("2", $email)) {
-            $email_stock = 1;
-        }
-        if (in_array("3", $email)) {
-            $email_event = 1;
-        }
-        if (in_array("1", $sms)) {
-            $sms_watchlist = 1;
-        }
-        if (in_array("2", $sms)) {
-            $sms_stock = 1;
-        }
-        if (in_array("3", $sms)) {
-            $sms_event = 1;
-        }
-        $data['time_alerts'] = $user['time_alerts'];
-        $data['email_watchlist'] = $email_watchlist;
-        $data['email_stock'] = $email_stock;
-        $data['email_event'] = $email_event;
-        $data['sms_watchlist'] = $sms_watchlist;
-        $data['sms_stock'] = $sms_stock;
-        $data['sms_event'] = $sms_event;
-
-        return $data;
     }
 
 }

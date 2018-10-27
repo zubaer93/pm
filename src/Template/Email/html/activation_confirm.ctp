@@ -12,7 +12,7 @@
                         <table class="row note">
                             <tr>
                                 <td class="wrapper last">
-                                    <h2>Welcome to Stockgitter.</h2>
+                                    <h2>Welcome to Pocket Money.</h2>
                                     <p> Hello <?= $user_details; ?>, <br /> <br />
                                         Congratulations! Your account has been activated successfully.
                                     </p>

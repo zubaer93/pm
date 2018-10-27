@@ -307,7 +307,7 @@ class AppUsersTable extends UsersTable
         $ext = pathinfo($path, PATHINFO_EXTENSION);
         $filename = $data['id'] . '.' . $ext;
         $directoryPath = WWW_ROOT . DS . 'upload';
-        $directory = ROOT . DS . 'webroot\upload\avatar' . DS;
+        $directory = ROOT . DS . 'webroot'.DS.'upload'.DS.'avatar' . DS;
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
@@ -315,8 +315,105 @@ class AppUsersTable extends UsersTable
             return false;
         }
         $user = $this->get($data['id']);
-        $user->avatar = 'webroot\upload\avatar' . DS . $filename;
+        $user->avatar = '\webroot\upload\avatar' . DS . $filename;
         return $this->save($user);
+    }
+
+    public function uploadDoc($data)
+    {   
+       
+        
+
+        if(!empty($data['nid'])){
+            $path1 = $data['nid']['name'];
+            $ext1 = pathinfo($path1, PATHINFO_EXTENSION);
+            $filenameNid = $data['id'] . '.' . $ext1;
+
+            $directoryNid = ROOT . DS .'webroot'.DS.'upload'.DS.'nid'.DS;
+
+            if (!file_exists($directoryNid)) {
+                mkdir($directoryNid, 0777, true);
+            }
+            if (!move_uploaded_file($data['nid']['tmp_name'], $directoryNid . $filenameNid)) {
+                return false;
+            }
+        }
+        if(!empty($data['verifyPhoto'])){
+            $path2 = $data['verifyPhoto']['name'];
+            $ext2 = pathinfo($path2, PATHINFO_EXTENSION);
+            $filenamePhoto = $data['id'] . '.' . $ext2;
+
+            $directoryPhoto = ROOT . DS .'webroot'.DS.'upload'.DS.'verifyPhoto'.DS;
+
+            if (!file_exists($directoryPhoto)) {
+                mkdir($directoryPhoto, 0777, true);
+            }
+            if (!move_uploaded_file($data['verifyPhoto']['tmp_name'], $directoryPhoto . $filenamePhoto)) {
+                return false;
+            }
+        }
+        if(!empty($data['utility_bill'])){
+            $path3 = $data['utility_bill']['name'];
+            $ext3 = pathinfo($path3, PATHINFO_EXTENSION);
+            $filenameUtilityBill = $data['id'] . '.' . $ext3;
+
+            $directoryUtilityBill = ROOT . DS .'webroot'.DS.'upload'.DS.'utility_bill'.DS;
+
+            if (!file_exists($directoryUtilityBill)) {
+                mkdir($directoryUtilityBill, 0777, true);
+            }
+            if (!move_uploaded_file($data['utility_bill']['tmp_name'], $directoryUtilityBill . $filenameUtilityBill)) {
+                return false;
+            }
+        }
+        if(!empty($data['statement'])){
+            $path4 = $data['statement']['name'];
+            $ext4 = pathinfo($path4, PATHINFO_EXTENSION);
+            $filenameStatement = $data['id'] . '.' . $ext4;
+            $directoryStatement = ROOT . DS .'webroot'.DS.'upload'.DS.'statement'.DS;
+          
+            if (!file_exists($directoryStatement)) {
+                mkdir($directoryStatement, 0777, true);
+            }
+            
+            if ((!move_uploaded_file($data['statement']['tmp_name'], $directoryStatement . $filenameStatement))) {
+                return false;
+            }
+        }
+        if(!empty($data['others'])){
+            $path5 = $data['others']['name'];
+            $ext5 = pathinfo($path5, PATHINFO_EXTENSION);
+            $filenameOthers = $data['id'] . '.' . $ext5;
+
+            $directoryOthers = ROOT . DS .'webroot'.DS.'upload'.DS.'others'.DS;
+
+            if (!file_exists($directoryOthers)) {
+                mkdir($directoryOthers, 0777, true);
+            }
+            if (!move_uploaded_file($data['others']['tmp_name'], $directoryOthers . $filenameOthers)) {
+                return false;
+            }
+        }
+
+        $user = $this->get($data['id']);
+        
+        if(!empty($data['others'])){
+            $user->others_doc = '\webroot\upload\others' . DS . $filenameOthers;
+        }
+        if(!empty($data['nid'])){
+            $user->nid = '\webroot\upload\nid' . DS . $filenameNid;
+        }
+        if(!empty($data['verifyPhoto'])){
+            $user->verifyPhoto = '\webroot\upload\verifyPhoto' . DS . $filenamePhoto;
+        }
+        if(!empty($data['utility_bill'])){
+            $user->utility_bill = '\webroot\upload\utility_bill' . DS . $filenameUtilityBill;
+        }
+        if(!empty($data['statement'])){
+            $user->statement1 = '\webroot\upload\statement' . DS . $filenameStatement;
+        }
+        return $this->save($user);
+     
     }
 
     /**
@@ -363,258 +460,6 @@ class AppUsersTable extends UsersTable
             }
         }
         return $result;
-    }
-
-    /**
-     * saveAlerts method this method will save and modify de alerts based in the logged user.
-     *
-     * @param array $data data from request
-     * @param string $userId Logged User
-     * @return bool
-     */
-    public function saveAlerts($data, $userId)
-    {
-        $emailConfig['global_alert_id']['1'] = $data['email_watchlist'];
-        $emailConfig['global_alert_id']['2'] = $data['email_stock'];
-        $emailConfig['global_alert_id']['3'] = $data['email_event'];
-        $emailConfig['time_alerts']['time_of_day']['hour'] = $data['email_hour'];
-        $emailConfig['time_alerts']['time_of_day']['minute'] = $data['email_minute'];
-        $emailConfig['time_alerts']['when_happens'] = $data['email_when_happens'];
-
-        $smsConfig['global_alert_id']['1'] = $data['sms_watchlist'];
-        $smsConfig['global_alert_id']['2'] = $data['sms_stock'];
-        $smsConfig['global_alert_id']['3'] = $data['sms_event'];
-        $smsConfig['time_alerts']['time_of_day']['hour'] = $data['sms_hour'];
-        $smsConfig['time_alerts']['time_of_day']['minute'] = $data['sms_minute'];
-        $smsConfig['time_alerts']['when_happens'] = $data['sms_when_happens'];
-
-        $this->getConnection()->begin();
-        $this->EmailAlerts->deleteAll(['user_id' => $userId]);
-        $this->SmsAlerts->deleteAll(['user_id' => $userId]);
-        $this->TimeAlerts->deleteAll(['user_id' => $userId]);
-
-        $emailTimeAlert = $this->__processTimeAlert($emailConfig, 'email', $userId);
-
-        $emailEntity = $this->TimeAlerts->newEntity($emailTimeAlert);
-        if (!empty($emailEntity) && !$this->TimeAlerts->save($emailEntity)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $smsTimeAlert = $this->__processTimeAlert($smsConfig, 'sms', $userId);
-
-        $smsEntity = $this->TimeAlerts->newEntity($smsTimeAlert);
-        if (!empty($smsEntity) && !$this->TimeAlerts->save($smsEntity)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $newEmailAlert = $this->__processAlertData($emailConfig, $emailEntity->id, $userId);
-
-        $entities = $this->EmailAlerts->newEntities($newEmailAlert);
-
-        if (!empty($entities) && !$this->EmailAlerts->saveMany($entities)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $smsEmailAlert = $this->__processAlertData($smsConfig, $smsEntity->id, $userId);
-        $entities = $this->SmsAlerts->newEntities($smsEmailAlert);
-        if (!empty($entities) && !$this->SmsAlerts->saveMany($entities)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $this->getConnection()->commit();
-
-        return true;
-    }
-
-    /**
-     * saveAlerts method this method will save and modify de alerts based in the logged user.
-     *
-     * @param array $data data from request
-     * @param string $userId Logged User
-     * @return bool
-     */
-    public function saveInitialAlerts($data, $userId, $is_initial = false)
-    {
-        $emailConfig = Hash::get($data, 'email_alerts');
-        $smsConfig = Hash::get($data, 'sms_alerts');
-        $this->getConnection()->begin();
-
-        if ($this->EmailAlerts->deleteAll(['user_id' => $userId]) === false) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-
-        if ($this->SmsAlerts->deleteAll(['user_id' => $userId]) === false) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-
-        if ($this->TimeAlerts->deleteAll(['user_id' => $userId]) === false) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $emailTimeAlert = $this->__processTimeAlert($emailConfig, 'email', $userId);
-        $emailEntity = $this->TimeAlerts->newEntity($emailTimeAlert);
-        if (!$this->TimeAlerts->save($emailEntity)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $smsTimeAlert = $this->__processTimeAlert($smsConfig, 'sms', $userId);
-        $smsEntity = $this->TimeAlerts->newEntity($smsTimeAlert);
-        if (!$this->TimeAlerts->save($smsEntity)) {
-            $this->getConnection()->rollback();
-            return false;
-        }
-
-        $newEmailAlert = $this->__processAlertData($emailConfig, $emailEntity->id, $userId);
-        $entities = $this->EmailAlerts->newEntities($newEmailAlert);
-        if (!empty($entities)) {
-            if (!$this->EmailAlerts->saveMany($entities)) {
-                $this->getConnection()->rollback();
-                return false;
-            }
-        }
-
-        $smsEmailAlert = $this->__processAlertData($smsConfig, $smsEntity->id, $userId);
-        $entities = $this->SmsAlerts->newEntities($smsEmailAlert);
-
-        if (!empty($entities)) {
-            if (!$this->SmsAlerts->saveMany($entities)) {
-                $this->getConnection()->rollback();
-                return false;
-            }
-        }
-
-        $this->getConnection()->commit();
-
-        return true;
-    }
-
-    /**
-     * __processEmailTimeAlert method it will prepare the email data to be saved
-     *
-     * @param array $data Email Data to be saved
-     * @param $kind
-     * @param $userId
-     * @return array
-     */
-    private function __processTimeAlert($data, $kind, $userId)
-    {
-        $timeOfDay = false;
-
-        if (!empty($data['time_alerts']['time_of_day']['hour']) || !empty($data['time_alerts']['time_of_day']['minute'])) {
-            $timeOfDay = $data['time_alerts']['time_of_day']['hour'] . ':' . $data['time_alerts']['time_of_day']['minute'];
-        }
-
-        return [
-            'user_id' => $userId,
-            'kind' => $kind,
-            'when_happens' => (bool)$data['time_alerts']['when_happens'],
-            'time_of_day' => $timeOfDay
-        ];
-    }
-
-    /**
-     * __processEmailAlertData method it will prepare the email data to be saved
-     *
-     * @param array $data Email Data to be saved
-     * @param $timeId
-     * @param $userId
-     * @return array
-     */
-    private function __processAlertData($data, $timeId, $userId)
-    {
-        $newAlerts = [];
-        foreach ($data['global_alert_id'] as $id => $value) {
-            if (!empty($value)) {
-                $newAlerts[] = [
-                    'global_alert_id' => $id,
-                    'time_alert_id' => $timeId,
-                    'user_id' => $userId,
-                ];
-            }
-        }
-
-        return $newAlerts;
-    }
-
-    /**
-     * __defaultAlerts method it will save default settings when a new users sign up.
-     *
-     * @return array
-     */
-    private function __defaultAlerts()
-    {
-        return [
-            'email_alerts' => [
-                'global_alert_id' => [
-                    1 => '1',
-                    2 => '0',
-                    3 => '1'
-                ],
-                'time_alerts' => [
-                    'when_happens' => '1'
-                ]
-            ],
-            'sms_alerts' => [
-                'global_alert_id' => [
-                    1 => '0',
-                    2 => '0',
-                    3 => '0'
-                ],
-                'time_alerts' => [
-                    'when_happens' => '0'
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * notify method it will send the notifications based in their global notifications settings
-     *
-     * @param array $companyIds Company Ids.
-     * @param string $type Type of alert to be instantiated.
-     * @param array $currentRecord Current record saved to use the info in the email.
-     * @return void
-     */
-    public function notify($companyIds, $type, $currentRecord)
-    {
-        $emailAlertKind = 'email';
-        $users = $this->Watchlist->getStocksAlerts($companyIds, $emailAlertKind);
-
-        if (!$users->isEmpty()) {
-            $emailAlert = $this->__loadAlertClass($emailAlertKind, $type);
-            $emailAlert->notify($users, $currentRecord);
-        }
-
-        $smsAlertKind = 'sms';
-        if (!$users->isEmpty()) {
-            $smsAlert = $this->__loadAlertClass($smsAlertKind, $type);
-            $smsAlert->notify($users, $currentRecord);
-        }
-    }
-
-    /**
-     * __loadAlertClass method it will return a EmailAlert or SmsAlert instance class.
-     *
-     * @param string $kind What class should be instantiated.
-     * @param $type
-     * @return EmailAlert SmsAlert
-     */
-    private function __loadAlertClass($kind, $type)
-    {
-        $className = $type . ucfirst($kind) . 'Alert';
-        $class = '\App\Notifications\\' . ucfirst($kind) . '\\' . $className;
-
-        return new $class();
     }
 
     /**
