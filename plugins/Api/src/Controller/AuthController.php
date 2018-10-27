@@ -99,9 +99,9 @@ class AuthController extends AppController
         // add logs
         //$options = array('token' => $user_data['token'], 'content_id' => $user['id'], 'user_id' => $user['id'], 'type' => 'users', 'action' => 'login');
         //$this->Logs->addToLog($options);
-        $date = strtotime("+1 day");
-        $this->AppUsers->patchEntity($user, ['token_expires' => date('Y-m-d 00:00:00', $date)]);
-        $this->AppUsers->save($user);
+        //$date = strtotime("+1 day");
+        //$this->AppUsers->patchEntity($user, ['token_expires' => date('Y-m-d 00:00:00', $date)]);
+       // $this->AppUsers->save($user);
         $this->apiResponse['data'] = $user_data;
     }
 
@@ -115,29 +115,36 @@ class AuthController extends AppController
                 if (!empty($data['email']) && !empty($data['password'])) {
                     $check_email = $this->AppUsers->find()->where(['email' => $data['email']])->toArray();
                     if (count($check_email) == 0) {
-                        $activation = $this->six_digit_random_number();
-                        $data['token'] = $activation;
-                        $data['active'] = 0;
-                        $user = $this->AppUsers->newEntity();
-                        $user->date_of_birth = date("Y-m-d", strtotime($data['birth_date']));
-                        $user = $this->AppUsers->patchEntity($user, $data);
-                        //dd($user);
-                        if ($this->AppUsers->save($user)) {
-                            Configure::load('Api.appConfig', 'default');
-                            $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Pocket Money Account Activation');
-                            // send email for activation
-                            $this->send_email($options);
-                            $this->apiResponse['message'] = 'User has been saved successfully. An email is sent to your email address. Please check your email and activate account.';
-                            $this->AppUsers->getConnection()->commit();
-                        } else {
-                            $this->httpStatusCode = 400;
-                            if ($user->errors()) {
-                                $this->apiResponse['error'] = '';
-                                foreach ($user->errors() as $field => $validationMessage) {
-                                    $this->apiResponse['error'] .= $validationMessage[key($validationMessage)] . ' | ';
+                        $check_mobile = $this->AppUsers->find()->where(['mobile_number' => $data['mobile_number']])->first();
+                        if(!$check_mobile){
+                            $activation = $this->six_digit_random_number();
+                            $data['token'] = $activation;
+                            $data['active'] = 0;
+                            $user = $this->AppUsers->newEntity();
+                            $user->date_of_birth = date("Y-m-d", strtotime($data['birth_date']));
+                            $user = $this->AppUsers->patchEntity($user, $data);
+                            //dd($user);
+                            if ($this->AppUsers->save($user)) {
+                                Configure::load('Api.appConfig', 'default');
+                                $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Pocket Money Account Activation');
+                                // send email for activation
+                                $this->send_email($options);
+                                $this->apiResponse['message'] = 'User has been saved successfully. An email is sent to your email address. Please check your email and activate account.';
+                                $this->AppUsers->getConnection()->commit();
+                            } else {
+                                $this->httpStatusCode = 400;
+                                if ($user->errors()) {
+                                    $this->apiResponse['error'] = '';
+                                    foreach ($user->errors() as $field => $validationMessage) {
+                                        $this->apiResponse['error'] .= $validationMessage[key($validationMessage)] . ' | ';
+                                    }
                                 }
+                                $this->AppUsers->getConnection()->rollback();
                             }
-                            $this->AppUsers->getConnection()->rollback();
+                        }
+                        else{
+                            $this->httpStatusCode = 400;// bad request
+                            $this->apiResponse['error'] = 'This mobile number is already registered';
                         }
                     } else {
                         $this->httpStatusCode = 400;// bad request
@@ -176,7 +183,8 @@ class AuthController extends AppController
                 $check_user->activation_date = date('Y-m-d');
                 if ($this->AppUsers->save($check_user)) {
                     $message = $this->confirmActivation($check_user['email']);
-                    $this->apiResponse['message'] = 'Your account has been activated successfully.' . $message;
+                    $this->UserLogin($check_user);
+                    //$this->apiResponse['message'] = 'Your account has been activated successfully.' . $message;
                 } else {
                     $this->httpStatusCode = 400;
                     $this->apiResponse['error'] = 'Account could not be activated. Please try again later.';
