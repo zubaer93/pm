@@ -67,20 +67,22 @@ class AuthController extends AppController
 
     private function UserLogin($user)
     {
-        $users = ['email' => $user['email'], 'id' => $user['id'], 'is_superuser' => $user['is_superuser'], 'role' => $user['role'], $date = date('Y-m-d h:i:s'), 'username' => $user['username']];
+        $users = [  
+                    'email' => $user['email'], 
+                    'id' => $user['id'], 
+                    'role' => $user['role'], 
+                    $date = date('Y-m-d h:i:s'), 
+                    'mobile_number' => $user['mobile_number'],
+                    'account_type' => $user['account_type'],
+                    'user_level' => $user['user_level'],
+                ];
+
         if ($user['avatar']) {
             $avatar = $user['avatar'];
         } else {
             $avatar = Configure::read('Users.avatar.default');
         }
-        // $interval = date_diff($user->created, date_create());
-     
-        // if($interval->days <=14){
-        //     $isTrial = true;
-        // }
-        // else{
-        //     $isTrial = false;
-        // }
+      
         $user_data = array(
             'token' => JwtToken::generateToken($users),
             'user_id' => $user['id'],
@@ -96,12 +98,6 @@ class AuthController extends AppController
             'created_at' => $user->created,
             //'isTrial' => $isTrial
         );
-        // add logs
-        //$options = array('token' => $user_data['token'], 'content_id' => $user['id'], 'user_id' => $user['id'], 'type' => 'users', 'action' => 'login');
-        //$this->Logs->addToLog($options);
-        //$date = strtotime("+1 day");
-        //$this->AppUsers->patchEntity($user, ['token_expires' => date('Y-m-d 00:00:00', $date)]);
-       // $this->AppUsers->save($user);
         $this->apiResponse['data'] = $user_data;
     }
 
@@ -129,6 +125,8 @@ class AuthController extends AppController
                                 $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Pocket Money Account Activation');
                                 // send email for activation
                                 $this->send_email($options);
+                                //send otp in mobile
+                                //$this->AppUsers->sendOTP($data['mobile_number'],$activation);
                                 $this->apiResponse['message'] = 'User has been saved successfully. An email is sent to your email address. Please check your email and activate account.';
                                 $this->AppUsers->getConnection()->commit();
                             } else {
@@ -164,6 +162,46 @@ class AuthController extends AppController
             $this->httpStatusCode = 403;
             $this->AppUsers->getConnection()->rollback();
             $this->apiResponse['error'] = 'Please enter user informations';
+        }
+    }
+    /*
+     * resend activation email. if admin resend activation code, he will provide user id. if user request for resend
+     * activation code, he has to provide his email id
+     *
+     * @param $user_id, or email as form data
+     * */
+    public function resendEmailActivation($id = null)
+    {
+        $this->request->allowMethod('post');
+        $this->add_model(array('Api.AppUsers'));
+        $data = $this->request->getData();
+        if (!empty($id) || !empty($data['email'])) {
+            $user = $this->AppUsers->find()->where(['id' => $id])->orWhere(['email' => $data['email']])->first();
+            if (!empty($user)) {
+                if ($user['active'] == 1) {
+                    $this->httpStatusCode = 400;
+                    $this->apiResponse['error'] = 'This account is already active';
+                } else {
+                    $activation = $this->six_digit_random_number();
+                    $user->token = $activation;
+                    if ($this->AppUsers->save($user)) {
+                        Configure::load('Api.appConfig', 'default');
+                        $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Stockgitter Account Activation');
+                        $this->send_email($options);
+                        $this->apiResponse['message'] = 'An email is sent to your email address. Please check your email and activate account.';
+
+                    } else {
+                        $this->httpStatusCode = 400;
+                        $this->apiResponse['error'] = 'This email could not be sent. Please try again.';
+                    }
+                }
+            } else {
+                $this->httpStatusCode = 400;
+                $this->apiResponse['error'] = 'Sorry. You have entered wrong user id or email.';
+            }
+        } else {
+            $this->httpStatusCode = 403;
+            $this->apiResponse['error'] = 'Please enter user id or email';
         }
     }
 
@@ -420,15 +458,19 @@ class AuthController extends AppController
         if (!empty($this->jwtToken)) {
             $user = $this->Users->find()->where(['api_token' => $this->jwtToken])->first();
             if (!empty($user)) {
-                $users = ['email' => $user['email'], 'id' => $user['id'], 'is_superuser' => $user['is_superuser'], 'role' => $user['role'], $date = date('Y-m-d h:i:s'), 'username' => $user['username'],];
+                $users = ['email' => $user['email'], 
+                            'id' => $user['id'], 
+                            'is_superuser' => $user['is_superuser'], 
+                            'role' => $user['role'], $date = date('Y-m-d h:i:s'), 
+                            'mobile_number' => $user['mobile_number'],];
                 $user_data = array(
                     'token' => JwtToken::generateToken($users),
                     'user_id' => $user['id'],
                     'name' => $user['first_name'] . ' ' . $user['last_name'],
                     'email' => $user['email'],
-                    'username' => $user['username'],
+                    'mobile_number' => $user['mobile_number'],
                     'role' => $user['role'],
-                    'is_superuser' => $user['is_superuser']
+                    'account_type' => $user['account_type']
                 );
                 $options = array('token' => $user_data['token'], 'content_id' => $user['id'], 'user_id' => $user['id'], 'type' => 'users', 'action' => 'login');
                 $this->Logs->addToLog($options);
@@ -581,46 +623,7 @@ class AuthController extends AppController
         }
     }
 
-    /*
-     * resend activation email. if admin resend activation code, he will provide user id. if user request for resend
-     * activation code, he has to provide his email id
-     *
-     * @param $user_id, or email as form data
-     * */
-    public function resendEmailActivation($id = null)
-    {
-        $this->request->allowMethod('post');
-        $this->add_model(array('Api.AppUsers'));
-        $data = $this->request->getData();
-        if (!empty($id) || !empty($data['email'])) {
-            $user = $this->AppUsers->find()->where(['id' => $id])->orWhere(['email' => $data['email']])->first();
-            if (!empty($user)) {
-                if ($user['active'] == 1) {
-                    $this->httpStatusCode = 400;
-                    $this->apiResponse['error'] = 'This account is already active';
-                } else {
-                    $activation = $this->six_digit_random_number();
-                    $user->token = $activation;
-                    if ($this->AppUsers->save($user)) {
-                        Configure::load('Api.appConfig', 'default');
-                        $options = array('template' => 'register', 'to' => $user['email'], 'activation' => $activation, 'link' => Configure::read('activate_account'), 'subject' => 'Stockgitter Account Activation');
-                        $this->send_email($options);
-                        $this->apiResponse['message'] = 'An email is sent to your email address. Please check your email and activate account.';
-
-                    } else {
-                        $this->httpStatusCode = 400;
-                        $this->apiResponse['error'] = 'This email could not be sent. Please try again.';
-                    }
-                }
-            } else {
-                $this->httpStatusCode = 400;
-                $this->apiResponse['error'] = 'Sorry. You have entered wrong user id or email.';
-            }
-        } else {
-            $this->httpStatusCode = 403;
-            $this->apiResponse['error'] = 'Please enter user id or email';
-        }
-    }
+   
 
 
     /**
@@ -643,105 +646,4 @@ class AuthController extends AppController
 
     }
 
-    /* login with facebook account
-   *@param email, password
-    * */
-    public function socialLogin()
-    {
-        $token = $this->request->getQuery('access_token');
-        $prov = $this->request->getQuery('provider');
-        $access_token = new AccessToken(['access_token' => $token]);
-        $provider = null;
-        if ($prov == 'facebook') {
-            $provider = new \League\OAuth2\Client\Provider\Facebook([
-                'clientId' => '695659730774650',
-                'clientSecret' => '404ff8a407e67cd465081599afe9131e',
-                'graphApiVersion' => 'v2.10',
-            ]);
-
-        } elseif ($prov == 'google') {
-            $provider = new \League\OAuth2\Client\Provider\Google([
-                'clientId' => '204513801428-6tip4re8vbvp6hb0g26p3lh9hnf3376u.apps.googleusercontent.com',
-                'clientSecret' => 'mBBCYyWFL_XDgi0X9PL02xBk',
-                //'redirectUri'  => 'https://example.com/callback-url',
-            ]);
-
-
-        } elseif ($prov == null) {
-            $this->httpStatusCode = 404;
-            $this->apiResponse['error'] = 'please insert a provider name';
-            return;
-        }
-
-        try {
-            // We got an access token, let's now get the owner details
-            $ownerDetails = $provider->getResourceOwner($access_token);
-            $id = $ownerDetails->getId();
-            $name = $ownerDetails->getName();
-            $firstName = $ownerDetails->getFirstName();
-            $lastName = $ownerDetails->getLastName();
-            $email = $ownerDetails->getEmail();
-            $pictureUrl = $prov == 'google' ? $ownerDetails->getAvatar() : $ownerDetails->getPictureUrl();
-            $gender = null;
-            $minAge = null;
-
-        } catch (\Exception $e) {
-            // Failed to get user details
-            $this->apiResponse['error'] = $e->getMessage();
-            return;
-
-        }
-        $user_data = array(
-            'id' => $id,
-            'name' => $name,
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'email' => $email,
-            'avatar' => $pictureUrl,
-            'gender' => $gender,
-            'minAge' => $minAge,
-        );
-        if (!empty($user_data)) {
-            $this->loadModel('Api.AppUsers');
-            $check_email = $this->AppUsers->find()->where(['email' => $user_data['email']])->first();
-            if (!$check_email) {
-                try {
-                    $this->AppUsers->getConnection()->begin();
-                    $role = "user";
-                    $user_reg = array(
-                        'avatar' => $user_data['avatar'],
-                        'first_name' => $user_data['firstName'],
-                        'last_name' => $user_data['lastName'],
-                        'email' => $user_data['email'],
-                        'username' => $user_data['firstName'] . strtotime(date('m/d/Y h:i:s a')),
-                        'role' => $role,
-                        'active' => 1,
-                        'activation_date' => date('Y-m-d h:i:s'),
-                        'password' => (new DefaultPasswordHasher)->hash('kdfg87dtsfkdgf7u&kugi7k'),
-                        'is_superuser' => 0,
-                    );
-                    $userSave = $this->AppUsers->newEntity();
-                    $userSave = $this->AppUsers->patchEntity($userSave, $user_reg);
-                    if ($this->AppUsers->save($userSave)) {
-                        $user = $this->AppUsers->find()->where(['email' => $userSave->email])->first();
-                        $this->AppUsers->getConnection()->commit();
-                        $this->UserLogin($user);
-                    } else {
-                        $this->AppUsers->getConnection()->rollback();
-                        $this->httpStatusCode = 404;
-                        $this->apiResponse['error'] = 'error';
-                    }
-                } catch (\Exception $e) {
-                    $this->AppUsers->getConnection()->rollback();
-                    $this->apiResponse['error'] = $e->getMessage();
-                    $this->httpStatusCode = 500;
-                }
-            } else {
-                $this->UserLogin($check_email);
-            }
-        } else {
-            $this->httpStatusCode = 404;
-            $this->apiResponse['error'] = 'No data found';
-        }
-    }
 }

@@ -49,6 +49,46 @@ Router::plugin('Api', ['path' => '/api'], function (RouteBuilder $routes) {
     $routes->connect('/users/verify-profile', 
         ['controller' => 'users', 'action' => 'uploadDocuments', '[method]' => ['POST', 'OPTIONS']], 
         ['routeClass' => 'Api.LangRoute']);
+   
+    //credit plans route
+    $routes->connect('/admin/credit_plans', 
+        ['controller' => 'creditPlans', 'action' => 'add', '[method]' => ['POST', 'OPTIONS']], 
+        ['routeClass' => 'Api.LangRoute']);
+
+    $routes->connect('/credit_plans', 
+        ['controller' => 'creditPlans', 'action' => 'getPlans', '[method]' => ['GET', 'OPTIONS']], 
+        ['routeClass' => 'Api.LangRoute']);
+
+    //fund request
+
+    $routes->connect(
+            '/funds-request/:plan_id',
+        ['controller' => 'creditPlans', 'action' => 'fundRequest', '[method]' => ['POST', 'OPTIONS']],
+        ['plan_id' => '\d+', 'pass' => ['plan_id'], 'routeClass' => 'Api.LangRoute']);
+    $routes->connect(
+            '/funds-request',
+            ['controller' => 'creditPlans', 'action' => 'getFundRequestAll', '[method]' => ['GET', 'OPTIONS']],
+            ['routeClass' => 'Api.LangRoute']);
+    $routes->connect(
+        '/funds-request/:request_id',
+        ['controller' => 'creditPlans', 'action' => 'getFundRequest', '[method]' => ['GET', 'OPTIONS']],
+        ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
+    $routes->connect(
+        '/funds-request/:request_id',
+        ['controller' => 'creditPlans', 'action' => 'deleteFundRequest', '[method]' => ['DELETE', 'OPTIONS']],
+        ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
+    $routes->connect(
+        '/funds-request/refund/:request_id',
+        ['controller' => 'creditPlans', 'action' => 'refund', '[method]' => ['POST', 'OPTIONS']],
+        ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
+    $routes->connect(
+        '/admin/funds-request/:request_id',
+        ['controller' => 'creditPlans', 'action' => 'approveRequest', '[method]' => ['POST', 'OPTIONS']],
+        ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
+    
+    
+    
+    
     $routes->fallbacks(DashedRoute::class);
 }
 );

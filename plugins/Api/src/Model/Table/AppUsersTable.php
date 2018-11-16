@@ -321,9 +321,6 @@ class AppUsersTable extends UsersTable
 
     public function uploadDoc($data)
     {   
-       
-        
-
         if(!empty($data['nid'])){
             $path1 = $data['nid']['name'];
             $ext1 = pathinfo($path1, PATHINFO_EXTENSION);
@@ -488,6 +485,37 @@ class AppUsersTable extends UsersTable
         return $user;
     }
 
+    public function sendOTP($mobile_number, $otp){
+        $post_url = 'https://smsportal.pigeonhost.com/smsapi' ;         
+        $post_values = array( 
+        'api_key' => 'e114c448f4ab8554ad14eff3d66dfeb3965ce8fc0d266157df0dbc8f9131dd9f4040a5e2',
+        'type' => 'text',  // unicode or text
+        'senderid' => 'PigeonHost',
+        'contacts' => $mobile_number,
+        'msg' => 'Welcome to Pocket Money. Your OTP is '.$otp,
+        'method' => 'api'
+        );
+        
+        $post_string = "";
+        foreach( $post_values as $key => $value )
+            { $post_string .= "$key=" . urlencode( $value ) . "&"; }
+            $post_string = rtrim( $post_string, "& " );
+            
+            
+        $request = curl_init($post_url);  
+            curl_setopt($request, CURLOPT_HEADER, 0);  
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, 1);  
+            curl_setopt($request, CURLOPT_POSTFIELDS, $post_string); 
+            curl_setopt($request, CURLOPT_SSL_VERIFYPEER, FALSE);  
+            $post_response = curl_exec($request);  
+            curl_close ($request);  
+            
+        $responses=array();  		
+            $array =  json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $post_response), true );   
+            
+        dd($array);
+
+    }
 
 
 }

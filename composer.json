@@ -26,7 +26,8 @@
         "firebase/php-jwt": "^4.0",
         "cakedc/enum": "^1.4.0",
         "braintree/braintree_php": "^3.35",
-        "stripe/stripe-php": "^6.19"
+        "stripe/stripe-php": "^6.19",
+        "pusher/pusher-php-server": "^3.2"
     },
     "require-dev": {
         "psy/psysh": "@stable",
