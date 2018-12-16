@@ -78,14 +78,14 @@ class CreditPlansController extends AppController
         }
     }
 
-    public function fundRequest($plan_id){
+    public function fundRequest(){
         $this->request->allowMethod('post');
         $data = $this->request->getData();
         if($data){
             $user = $this->AppUsers->get($this->jwtPayload->id);
             if( $user['account_type'] == 'verified'){
                 $request = $this->FundRequest->newEntity();
-                $data['plan_id'] = $plan_id;
+                //$data['plan_id'] = $plan_id;
                 $data['user_id'] = $this->jwtPayload->id;
                 $data['status'] = 0;
                 $data['request_date'] = date('Y-m-d H:i:s');
@@ -128,8 +128,9 @@ class CreditPlansController extends AppController
         }
     } 
     //get specific request
-    public function getFundRequest($request_id){
+    public function getFundRequest(){
         $this->request->allowMethod('get');
+        $request_id = $this->request->getData('request_id');
         if($request_id == null){
             $request = $this->FundRequest->find()
                         ->where(['user_id' =>$this->jwtPayload->id])
@@ -150,9 +151,10 @@ class CreditPlansController extends AppController
         }
     }   
 
-    public function deleteFundRequest($request_id)
+    public function deleteFundRequest()
     {
         $this->request->allowMethod('delete');
+        $request_id = $this->request->getData('request_id');
         if (!empty($request_id)) {
             try {
                 $request = $this->FundRequest->get($request_id);

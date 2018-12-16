@@ -62,7 +62,7 @@ Router::plugin('Api', ['path' => '/api'], function (RouteBuilder $routes) {
     //fund request
 
     $routes->connect(
-            '/funds-request/:plan_id',
+            '/funds-request',
         ['controller' => 'creditPlans', 'action' => 'fundRequest', '[method]' => ['POST', 'OPTIONS']],
         ['plan_id' => '\d+', 'pass' => ['plan_id'], 'routeClass' => 'Api.LangRoute']);
     $routes->connect(
@@ -70,11 +70,11 @@ Router::plugin('Api', ['path' => '/api'], function (RouteBuilder $routes) {
             ['controller' => 'creditPlans', 'action' => 'getFundRequestAll', '[method]' => ['GET', 'OPTIONS']],
             ['routeClass' => 'Api.LangRoute']);
     $routes->connect(
-        '/funds-request/:request_id',
+        '/funds-request-specific',
         ['controller' => 'creditPlans', 'action' => 'getFundRequest', '[method]' => ['GET', 'OPTIONS']],
         ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
     $routes->connect(
-        '/funds-request/:request_id',
+        '/funds-request',
         ['controller' => 'creditPlans', 'action' => 'deleteFundRequest', '[method]' => ['DELETE', 'OPTIONS']],
         ['request_id' => '\d+', 'pass' => ['request_id'], 'routeClass' => 'Api.LangRoute']);
     $routes->connect(

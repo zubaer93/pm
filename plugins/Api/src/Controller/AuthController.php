@@ -78,6 +78,7 @@ class AuthController extends AppController
                 ];
 
         if ($user['avatar']) {
+            $user['avatar'] = str_replace('\\', '/', $user['avatar']);
             $avatar = $user['avatar'];
         } else {
             $avatar = Configure::read('Users.avatar.default');
@@ -509,7 +510,9 @@ class AuthController extends AppController
                 $data['id'] = $this->jwtPayload->id;
                 $result = $this->AppUsers->uploadFile($data);
                 if ($result) {
-                    $this->apiResponse['data'] = Router::url($result['avatar'], true);
+                    $str = str_replace('\\', '/', $result['avatar']);
+                    //dd($str);
+                    $this->apiResponse['data'] = Router::url($str, true);
                     $this->apiResponse['message'] = 'Avatar has been updated successfully.';
                 } else {
                     $this->apiResponse['error'] = 'Avatar could not be updated. Please try again.';
@@ -590,6 +593,7 @@ class AuthController extends AppController
         $this->add_model(array('Api.AppUsers'));
         if ($user = $this->AppUsers->get($this->jwtPayload->id)) {
             if ($user['avatar']) {
+                $user['avatar'] = str_replace('\\', '/', $user['avatar']);
                 $this->apiResponse['data'] = Router::url($user['avatar'], true);
             } else {
                 $this->apiResponse['error'] = 'No avatar found';
