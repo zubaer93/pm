@@ -36,6 +36,8 @@ class AppController extends RestApiController
        /* if (Configure::read('ApiRequest.jwtAuth.enabled')) {
             $this->manageToken($event);
         }*/
+
+
        return true;
     }
 
