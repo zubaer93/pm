@@ -50,11 +50,7 @@
         <!-- PAGE LEVEL SCRIPTS -->
         <?= $this->Html->css('FrontendTheme.header-1'); ?>
 
-        <?php if ($settings->enabled_penny): ?>
-            <!--  code on 20-04-2018 start-->
-            <?= $this->Html->css('FrontendTheme.chatbot'); ?>
-            <!--  code on 20-04-2018 end-->
-        <?php endif; ?>
+       
 
         <?= $this->Html->css('FrontendTheme.color_scheme/green'); ?>
 
@@ -73,22 +69,7 @@
 
         <!-- wrapper -->
         <div id="wrapper">
-
-            <!-- Top Bar -->
-            <?= $this->element('Layout/topbar'); ?>
-            <!-- /Top Bar -->
-
-            <!-- Modal-->
-            <?= $this->element('Layout/modal'); ?>
-            <!-- /Modal -->
-
-            <!-- Nav Bar -->
-            <?= $this->element('Layout/navbar'); ?>
-            <!-- /Nav Bar -->
-
-            <!-- TICKERS -->
-            <?= $this->element('Layout/tickers', [$trendingCompanies]); ?>
-            <!-- /TICKERS -->
+           
             <div class="res-content mt-10">
             <?= $this->fetch('content'); ?>
             </div>

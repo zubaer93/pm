@@ -12,10 +12,14 @@
                         <table class="row note">
                             <tr>
                                 <td class="wrapper last">
-                                    <h2>Welcome to  Pochet Money</h2>
+                                    <h2>Welcome to  Stockgitter</h2>
                                     <p>
                                        Your password reset code is : <?php echo $activation; ?>
                                     </p>
+                                    <p>
+                                        Click the link bellow to reset your password.
+                                    </p>
+                                    <p><a href="<?= $link ?>"><?= $link ?></a></p>
 
                             </tr>
                         </table>

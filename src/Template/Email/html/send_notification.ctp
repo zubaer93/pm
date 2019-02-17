@@ -58,16 +58,16 @@
 
             <header>
                 <a href="<?= $this->Url->build('/', true) ?>" >
-                    <img src="https://www.stockgitter.com/frontend_theme/img/_smarty/stockgitter_header_logo.jpg" alt="StockGitter Logo" width="150" title="Logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUBcWjdqkJndDK_18Y8gsdY16HPgguUOL4-qdeWsJ1wHFIPjzX" alt="StockGitter Logo" width="150" title="Logo">
                 </a>
             </header>
             <hr>
             <article>
                 <h1><?= __('Dear') . ' ' . $to_first_name . ' ' . $to_last_name ?></h1>
-                <p><?= __('We want to tell you that '); ?> <a class="color" href="<?= $this->Url->build('/USD/',true) . 'user/' . $from_username ?>"><?= $from_username ?></a>  <?= __(' has tagged you in post.') ?></p>
-                <span><?=$message.'...'?></span><a href="<?= $url ?>" class="color" >
-                    <?= __('See More') ?>
-                </a>
+                <p><a class="color" href="<?= $siteUrl . '/USD/user/' . $from_username ?>"><?= $full_name ?></a>
+                <?= __(' has shared a strategy with you! To view this strategy, click ') ?><a class="color" href="<?= $url ?>"><?= $analysis ?></a> or you can login to stockgitter at anytime and look for shared strategies under My Portfolio.</p>
+
+                <p>Thank You</p>
                 <p><span class="color"><?= __('StockGitter '); ?> </span><?= __('Team'); ?></p>
             </article>
             <footer>&copy; <?= __(' All Rights Reserved, StockGitter LTD'); ?> </footer>

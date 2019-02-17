@@ -154,7 +154,8 @@ class CreditPlansController extends AppController
     public function deleteFundRequest()
     {
         $this->request->allowMethod('delete');
-        $request_id = $this->request->getData('request_id');
+        $request_id = $this->request->getQuery('request_id');
+        //$request_id = $this->request->getData('request_id');
         if (!empty($request_id)) {
             try {
                 $request = $this->FundRequest->get($request_id);

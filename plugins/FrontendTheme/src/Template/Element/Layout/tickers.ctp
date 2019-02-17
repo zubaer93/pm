@@ -94,43 +94,7 @@
 
 
             </div>
-            <div class="col-lg-8 col-md-12 col-sm-12 second_div_ticker">
-                <ul id="trending-list" class="top-links list-inline">
-                    <?php foreach ($trendingCompanies as $key => $company):?>
-                        <li title="<?= $company['company']['name']; ?>">
-                            <a href="<?= $this->Url->build(['_name' => 'symbol', 'stock' => $company['symbol']]); ?>">
-                                <h5 class="name selectable ">
-                                    <span class="stock-link"><?= $company['symbol']; ?></span>
-                                    <span class="price-change worse
-                                          <?= (($company['open'] - $company['close']) >= 0) ? 'positive' : 'negative'; ?>">
-                                          <?php
-                                              $percentage = $company['open'] == 0 ? 0 :
-                                                      ($company['open']- $company['close']) * 100 / $company['open'];
-                                              ?>
-                                              <?=
-                                              $this->Number->currency($company['open']) . ' ('
-                                              . $this->Number->toPercentage($percentage) . ')';
-                                              ?>
-                                    </span>
-                                </h5>
-                            </a>
-                            <div class="title-cells">
-                                <a href="<?= $this->Url->build(['_name' => 'symbol', 'stock' => $company['symbol']]); ?>">
-                                    <div class="cell">
-                                        <span class="price">
-                                            <?= __('Vol: ') . $company['volume']; ?>
-                                        </span>
-                                        <span class="percent-change"></span>
-                                        <time class="market-hours timestamp published-at">
-                                            <?= __('real time:') . ' ' . $company['last_refreshed']; ?>
-                                        </time>
-                                    </div>
-                                </a>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+         
         </div>
     </div>
 </div>

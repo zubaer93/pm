@@ -1,8 +1,23 @@
 <table width="660" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif">
+    <tr style="background-color: #0a1f30;">
+        <td width="25%">
+            <?= $this->Html->image('http://stockgitter.com/img/Welcome/stockgitter-welcome.png', ['fullBase' => true, 'style' => 'width: 70px; height: auto;']); ?>
+        </td>
+        <td width="50%" style="text-align: center;">
+            <a href="https://stockgitter.com/JMD">JMD Stocks</a>
+            <a href="https://stockgitter.com/USD">USD Stocks</a>
+            <a href="https://stockgitter.com/USD/ipo">IPO's</a>
+            <a href="https://stockgitter.com/USD/news">News</a>
+        </td>
+        <td width="25%">
+            
+        </td>
+    </tr>
+    
     <tr>
         <td colspan="3">
             <h1 style="text-align: center;">
-                Welcome to Pocket Money!
+                Welcome to StockGitter!
             </h1>
         </td>
     </tr>

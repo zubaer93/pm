@@ -12,13 +12,14 @@
                         <table class="row note">
                             <tr>
                                 <td class="wrapper last">
-                                    <h2>Welcome to  Pocket Money</h2>
+                                    <h2>Welcome to  Stockgitter</h2>
                                     <p>
                                         Your account activation code is : <?php echo $activation; ?>
                                     </p>
                                     <p>
-                                        Insert this code in your app to activate your account.
+                                        Click the link bellow to activate your account.
                                     </p>
+                                    <p><a href="<?= $link ?>"><?= $link ?></a></p>
 
 
                             </tr>
