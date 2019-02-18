@@ -37,6 +37,7 @@ class AppController extends RestApiController
             $this->manageToken($event);
         }*/
 
+
        return true;
     }
 
